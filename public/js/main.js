@@ -1,119 +1,111 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Main.js carregado');
+    
     // Referências para as telas
     const loginScreen = document.getElementById('login-screen');
     const controleProcessosScreen = document.getElementById('controle-processos-screen');
-    const iniciarProcessoScreen = document.getElementById('iniciar-processo-screen');
-    const textosModelosScreen = document.getElementById('textos-modelos-screen');
-    const blocosAssinaturaScreen = document.getElementById('blocos-assinatura-screen');
-    const gerarDocumentoScreen = document.getElementById('gerar-documento-screen');
     
     // Referência para o menu de navegação
     const mainNavbar = document.getElementById('main-navbar');
-
-    // Referências para os links de navegação
-    const navControleProcessos = document.getElementById('nav-controle-processos');
-    const navIniciarProcesso = document.getElementById('nav-iniciar-processo');
-    const navTextosModelos = document.getElementById('nav-textos-modelos');
-    const navBlocosAssinatura = document.getElementById('nav-blocos-assinatura');
-    const navGerarDocumento = document.getElementById('nav-gerar-documento');
-    const navLogout = document.getElementById('nav-logout');
     
-    // Array com todos os links de navegação
-    const navLinks = [
-        navControleProcessos,
-        navIniciarProcesso,
-        navTextosModelos,
-        navBlocosAssinatura,
-        navGerarDocumento
-    ];
-
-    // Função para esconder todas as telas
-    function hideAllScreens() {
-        loginScreen.classList.add('d-none');
-        controleProcessosScreen.classList.add('d-none');
-        iniciarProcessoScreen.classList.add('d-none');
-        textosModelosScreen.classList.add('d-none');
-        blocosAssinaturaScreen.classList.add('d-none');
-        gerarDocumentoScreen.classList.add('d-none');
-    }
-
-    // Função para mostrar uma tela específica
-    function showScreen(screen) {
-        hideAllScreens();
-        screen.classList.remove('d-none');
-    }
-    
-    // Função para atualizar o menu ativo
-    function setActiveNavLink(activeLink) {
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-        });
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
+    // Verificar se os elementos existem
+    if (!loginScreen || !controleProcessosScreen || !mainNavbar) {
+        console.error('Elementos essenciais não encontrados');
+        return;
     }
 
     // Manipulador de evento para o formulário de login
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        // Simulação de autenticação (em um sistema real, isso seria feito no servidor)
-        if (username && password) {
-            // Mostrar o menu de navegação após o login
-            mainNavbar.classList.remove('d-none');
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Login form submitted');
             
-            // Mostrar a tela de controle de processos
-            showScreen(controleProcessosScreen);
-            setActiveNavLink(navControleProcessos);
-        } else {
-            alert('Por favor, preencha todos os campos.');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simulação de autenticação
+            if (username && password) {
+                // Mostrar o menu de navegação
+                mainNavbar.classList.remove('d-none');
+                console.log('Menu de navegação visível:', !mainNavbar.classList.contains('d-none'));
+                
+                // Mostrar a tela de controle de processos
+                loginScreen.classList.add('d-none');
+                controleProcessosScreen.classList.remove('d-none');
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        });
+    }
+    
+    // Manipulador de evento para o botão de logout
+    const logoutButton = document.getElementById('nav-logout');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Esconder o menu de navegação
+            mainNavbar.classList.add('d-none');
+            
+            // Mostrar a tela de login
+            controleProcessosScreen.classList.add('d-none');
+            loginScreen.classList.remove('d-none');
+            
+            // Limpar os campos de login
+            if (document.getElementById('username')) {
+                document.getElementById('username').value = '';
+            }
+            if (document.getElementById('password')) {
+                document.getElementById('password').value = '';
+            }
+        });
+    }
+    
+    // Adicionar manipuladores de eventos para os links de navegação
+    const navLinks = {
+        'nav-controle-processos': controleProcessosScreen,
+        'nav-iniciar-processo': document.getElementById('iniciar-processo-screen'),
+        'nav-textos-modelos': document.getElementById('textos-modelos-screen'),
+        'nav-blocos-assinatura': document.getElementById('blocos-assinatura-screen'),
+        'nav-gerar-documento': document.getElementById('gerar-documento-screen')
+    };
+    
+    // Função para esconder todas as telas
+    function hideAllScreens() {
+        for (const key in navLinks) {
+            if (navLinks[key]) {
+                navLinks[key].classList.add('d-none');
+            }
         }
-    });
-
-    // Manipuladores de eventos para os links de navegação
-    navControleProcessos.addEventListener('click', function(e) {
-        e.preventDefault();
-        showScreen(controleProcessosScreen);
-        setActiveNavLink(navControleProcessos);
-    });
-
-    navIniciarProcesso.addEventListener('click', function(e) {
-        e.preventDefault();
-        showScreen(iniciarProcessoScreen);
-        setActiveNavLink(navIniciarProcesso);
-    });
-
-    navTextosModelos.addEventListener('click', function(e) {
-        e.preventDefault();
-        showScreen(textosModelosScreen);
-        setActiveNavLink(navTextosModelos);
-    });
-
-    navBlocosAssinatura.addEventListener('click', function(e) {
-        e.preventDefault();
-        showScreen(blocosAssinaturaScreen);
-        setActiveNavLink(navBlocosAssinatura);
-    });
-
-    navGerarDocumento.addEventListener('click', function(e) {
-        e.preventDefault();
-        showScreen(gerarDocumentoScreen);
-        setActiveNavLink(navGerarDocumento);
-    });
-
-    navLogout.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Esconder o menu de navegação ao fazer logout
-        mainNavbar.classList.add('d-none');
+    }
+    
+    // Adicionar event listeners para cada link de navegação
+    for (const key in navLinks) {
+        const link = document.getElementById(key);
+        const screen = navLinks[key];
         
-        // Mostrar a tela de login
-        showScreen(loginScreen);
-        setActiveNavLink(null);
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-    });
+        if (link && screen) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Esconder todas as telas
+                hideAllScreens();
+                
+                // Mostrar a tela correspondente
+                screen.classList.remove('d-none');
+                
+                // Atualizar o link ativo
+                for (const k in navLinks) {
+                    const l = document.getElementById(k);
+                    if (l) {
+                        l.classList.remove('active');
+                    }
+                }
+                link.classList.add('active');
+            });
+        }
+    }
 
     // Manipuladores de eventos para os botões da tela de controle de processos
     document.getElementById('btn-enviar-processo').addEventListener('click', function() {

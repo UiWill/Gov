@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const textosModelosScreen = document.getElementById('textos-modelos-screen');
     const blocosAssinaturaScreen = document.getElementById('blocos-assinatura-screen');
     const gerarDocumentoScreen = document.getElementById('gerar-documento-screen');
+    
+    // Referência para o menu de navegação
+    const mainNavbar = document.getElementById('main-navbar');
 
     // Referências para os links de navegação
     const navControleProcessos = document.getElementById('nav-controle-processos');
@@ -58,6 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Simulação de autenticação (em um sistema real, isso seria feito no servidor)
         if (username && password) {
+            // Mostrar o menu de navegação após o login
+            mainNavbar.classList.remove('d-none');
+            
+            // Mostrar a tela de controle de processos
             showScreen(controleProcessosScreen);
             setActiveNavLink(navControleProcessos);
         } else {
@@ -98,6 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     navLogout.addEventListener('click', function(e) {
         e.preventDefault();
+        // Esconder o menu de navegação ao fazer logout
+        mainNavbar.classList.add('d-none');
+        
+        // Mostrar a tela de login
         showScreen(loginScreen);
         setActiveNavLink(null);
         document.getElementById('username').value = '';
